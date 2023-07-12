@@ -46,5 +46,9 @@ def get_mev_params():
     validator_extra_params = ["--builder-proposals"]
     beacon_extra_params = ["--builder={0}".format(mev_url)]
     mev_builder_image = "h4ck3rk3y/builder"
+    beacon_extra_params.append("--always-prepare-payload")
+    beacon_extra_params.append("--prepare-payload-lookahead")
+    beacon_extra_params.append("12000")
+
 
     return el_extra_params, mev_builder_image, validator_extra_params, beacon_extra_params
