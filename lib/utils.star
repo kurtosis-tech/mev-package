@@ -1,3 +1,5 @@
+PATH_TO_PARSED_BEACON_STATE = "/genesis/output/parsedBeaconState.json"
+
 def get_genesis_validators_root(plan, validator_service_name):
     response = plan.exec(
         service_name = validator_service_name,
