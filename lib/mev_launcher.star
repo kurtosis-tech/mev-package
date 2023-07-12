@@ -28,7 +28,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params):
     plan.wait(recipe = epoch_recipe, field = "extract.epoch", assertion = ">=", target_value = str(network_params["capella_fork_epoch"]), timeout = "20m", service_name = beacon_service_name)
     plan.print("epoch 2 reached, can begin mev stuff")
 
-    relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params.network_id, beacon_uris, validators_root)
+    relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uris, validators_root)
     mev_flood_module.spam_in_background(plan, el_uri)
 
     mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)

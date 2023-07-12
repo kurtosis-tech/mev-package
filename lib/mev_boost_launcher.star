@@ -5,7 +5,7 @@ FLASHBOTS_MEV_BOOST_PROTOCOL = "TCP"
 FLASHBOTS_MEV_BOOST_PORT = 18550
 
 USED_PORTS = {
-	"api": PortSpec(number = FLASHBOTS_MEV_BOOST_PORT, FLASHBOTS_MEV_BOOST_PROTOCOL, wait="5s")
+	"api": PortSpec(FLASHBOTS_MEV_BOOST_PORT, FLASHBOTS_MEV_BOOST_PROTOCOL, wait="5s")
 }
 
 NETWORK_ID_TO_NAME = {
@@ -19,7 +19,7 @@ def launch(plan, mev_boost_launcher, service_name, network_id):
 
 	mev_boost_service = plan.add_service(service_name, config)
 
-	return mev_boost_context_module.new_mev_boost_context(mev_boost_service.ip_address, parse_input.FLASHBOTS_MEV_BOOST_PORT)
+	return mev_boost_context_module.new_mev_boost_context(mev_boost_service.ip_address, FLASHBOTS_MEV_BOOST_PORT)
 
 
 def get_config(mev_boost_launcher, network_id):
@@ -36,7 +36,7 @@ def get_config(mev_boost_launcher, network_id):
 			# TODO remove the hardcoding
 			# This is set to match this file https://github.com/kurtosis-tech/eth-network-package/blob/main/static_files/genesis-generation-config/cl/config.yaml.tmpl#L11
 			"GENESIS_FORK_VERSION": "0x10000038",
-			"BOOST_LISTEN_ADDR": "0.0.0.0:{0}".format(parse_input.FLASHBOTS_MEV_BOOST_PORT),
+			"BOOST_LISTEN_ADDR": "0.0.0.0:{0}".format(FLASHBOTS_MEV_BOOST_PORT),
 			"SKIP_RELAY_SIGNATURE_CHECK": "true",
 			"RELAYS": mev_boost_launcher.relay_end_points[0]
 		}
