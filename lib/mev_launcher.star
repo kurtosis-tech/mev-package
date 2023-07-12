@@ -18,6 +18,10 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params):
     beacon_uris = ",".join(beacon_uri)
     beacon_service_name = cl_client_context.beacon_service_name
 
+    mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)
+    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, ["http://0xae1c2ca7bbd6f415a5aa5bb4079caf0a5c273104be5fb5e40e2b5a2f080b2f5bd945336f2a9e8ba346299cb65b0f84c8@mev-relay-api:9062"])
+    mev_boost_context = mev_boost_module.launch(plan, mev_boost_launcher, mev_boost_service_name, network_params["network_id"])
+
     epoch_recipe = GetHttpRequestRecipe(
         endpoint = "/eth/v1/beacon/blocks/head",
         port_id = HTTP_PORT_ID_FOR_FACT,
@@ -30,10 +34,6 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params):
 
     relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uris, validators_root)
     mev_flood_module.spam_in_background(plan, el_uri)
-
-    mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)
-    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, [relay_endpoint])
-    mev_boost_context = mev_boost_module.launch(plan, mev_boost_launcher, mev_boost_service_name, network_params["network_id"])
 
     return {
         "mev-boost-context": mev_boost_context,
