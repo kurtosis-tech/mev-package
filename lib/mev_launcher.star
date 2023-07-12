@@ -28,7 +28,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params):
     plan.print("epoch 2 reached, can begin mev stuff")
 
     relay_endpoint = mev_relay_launcher_module.launch_mev_relay(plan, network_params.network_id, beacon_uris, validator_root)
-	mev_flood_module.spam_in_background(plan, el_uri)
+    mev_flood_module.spam_in_background(plan, el_uri)
 
     mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)
     mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, mev_endpoints)
