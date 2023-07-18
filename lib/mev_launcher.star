@@ -21,7 +21,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, launc
     beacon_service_name = cl_client_context.beacon_service_name
 
     mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)
-    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, ["http://0xae1c2ca7bbd6f415a5aa5bb4079caf0a5c273104be5fb5e40e2b5a2f080b2f5bd945336f2a9e8ba346299cb65b0f84c8@mev-relay-api:9062"])
+    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"])
     mev_boost_context = mev_boost_module.launch(plan, mev_boost_launcher, mev_boost_service_name, network_params["network_id"])
 
     epoch_recipe = GetHttpRequestRecipe(
