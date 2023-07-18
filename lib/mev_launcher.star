@@ -9,10 +9,11 @@ MEV_BOOST_SERVICE_NAME_PREFIX = "mev-boost-"
 MEV_BOOST_SHOULD_CHECK_RELAY = True
 HTTP_PORT_ID_FOR_FACT = "http"
 
-def launch_mev(plan, el_client_context, cl_client_context, network_params):
+def launch_mev(plan, el_client_context, cl_client_context, network_params, launch_mev_flood = True):
     validators_root = utils.get_genesis_validators_root(plan, VALIDATOR_SERVICE_NAME)
     el_uri = "http://{0}:{1}".format(el_client_context.ip_addr, el_client_context.rpc_port_num)
-    mev_flood_module.launch_mev_flood(plan, el_uri)
+    if launch_mev_flood:
+        mev_flood_module.launch_mev_flood(plan, el_uri)
     
     beacon_uri = ["http://{0}:{1}".format(cl_client_context.ip_addr, cl_client_context.http_port_num)]
     beacon_uris = ",".join(beacon_uri)
@@ -33,7 +34,8 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params):
     plan.print("epoch {0} reached, can begin mev stuff".format(network_params["capella_fork_epoch"]))
 
     relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uris, validators_root)
-    mev_flood_module.spam_in_background(plan, el_uri)
+    if launch_mev_flood:
+        mev_flood_module.spam_in_background(plan, el_uri)
 
     return {
         "mev-boost-context": mev_boost_context,
