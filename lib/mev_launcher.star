@@ -8,8 +8,9 @@ VALIDATOR_SERVICE_NAME = "cl-client-0-validator"
 MEV_BOOST_SERVICE_NAME_PREFIX = "mev-boost-"
 MEV_BOOST_SHOULD_CHECK_RELAY = True
 HTTP_PORT_ID_FOR_FACT = "http"
+SECONDS_PER_BUNDLE = "20" # higher than slot time 12
 
-def launch_mev(plan, el_client_context, cl_client_context, network_params, launch_mev_flood = True):
+def launch_mev(plan, el_client_context, cl_client_context, network_params, launch_mev_flood = True, seconds_per_bundle = SECONDS_PER_BUNDLE):
     validators_root = utils.get_genesis_validators_root(plan, VALIDATOR_SERVICE_NAME)
     el_uri = "http://{0}:{1}".format(el_client_context.ip_addr, el_client_context.rpc_port_num)
     if launch_mev_flood:
@@ -35,7 +36,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, launc
 
     relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uris, validators_root)
     if launch_mev_flood:
-        mev_flood_module.spam_in_background(plan, el_uri)
+        mev_flood_module.spam_in_background(plan, el_uri, seconds_per_bundle)
 
     return {
         "mev-boost-context": mev_boost_context,

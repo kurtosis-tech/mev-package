@@ -3,7 +3,7 @@ ADMIN_KEY = "0xef5177cd0b6b21c87db5a0bf35d4084a8a57a9d6a064f86d51ac85f2b873a4e2"
 USER_KEY = "0x7988b3a148716ff800414935b305436493e1f25237a2a03e5eebc343735e2f31"
 SECONDS_PER_BUNDLE = "20" # higher than slot time 12
 
-def launch_mev_flood(plan, el_uri, seconds_per_bundle = SECONDS_PER_BUNDLE):
+def launch_mev_flood(plan, el_uri):
     plan.add_service(
         name = "mev-flood",
         config = ServiceConfig(
@@ -19,7 +19,7 @@ def launch_mev_flood(plan, el_uri, seconds_per_bundle = SECONDS_PER_BUNDLE):
         )
     )
 
-def spam_in_background(plan, el_uri):
+def spam_in_background(plan, el_uri, seconds_per_bundle = SECONDS_PER_BUNDLE):
     plan.exec(
         service_name = "mev-flood",
         recipe = ExecRecipe(
