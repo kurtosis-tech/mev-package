@@ -12,11 +12,15 @@ def launch_mev_flood(plan, el_uri):
         )
     )
 
-    plan.exec(
+    plan.wait(
         service_name = "mev-flood",
         recipe = ExecRecipe(
             command = ["/bin/sh", "-c", "./run init -r {0} -k {1} -u {2} -s deployment.json".format(el_uri, ADMIN_KEY, USER_KEY)]
-        )
+        ),
+        field = "code",
+        assertion = "==",
+        target_value = 0,
+        timeout = "5m"
     )
 
 def spam_in_background(plan, el_uri, seconds_per_bundle = SECONDS_PER_BUNDLE):
