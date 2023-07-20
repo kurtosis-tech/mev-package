@@ -45,7 +45,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, launc
 
 def get_mev_params():
     mev_url = "http://{0}{1}:{2}".format(MEV_BOOST_SERVICE_NAME_PREFIX, 0, mev_boost_module.FLASHBOTS_MEV_BOOST_PORT)
-    el_extra_params = ["--builder",  "--builder.remote_relay_endpoint=http://mev-relay-api:9062", "--builder.beacon_endpoints=http://cl-client-{0}:4000".format(0), "--builder.bellatrix_fork_version=0x30000038", "--builder.genesis_fork_version=0x10000038", "--builder.genesis_validators_root=0xd1ec305b97bf6336571c2348e4a8bf173684b0cdb7e55f7e6554d51f8478b5a3",  "--miner.extradata=\"Illuminate Dmocratize Dstribute\"", "--miner.algotype=mev-geth"]
+    el_extra_params = ["--builder",  "--builder.remote_relay_endpoint=http://mev-relay-api:9062", "--builder.beacon_endpoints=http://cl-client-{0}:4000".format(0), "--builder.bellatrix_fork_version=0x30000038", "--builder.genesis_fork_version=0x10000038", "--builder.genesis_validators_root=0xd61ea484febacfae5298d52a2b581f3e305a51f3112a9241b968dccf019f7b11",  "--miner.extradata=\"Illuminate Dmocratize Dstribute\"", "--miner.algotype=mev-geth"]
     validator_extra_params = ["--builder-proposals"]
     beacon_extra_params = ["--builder={0}".format(mev_url)]
     mev_builder_image = "h4ck3rk3y/builder"
