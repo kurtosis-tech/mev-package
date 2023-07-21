@@ -34,7 +34,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_t
 
     result = {
         "mev-boost-context": mev_boost_context,
-        "relay_endpoint": relay_endpoint,
+        "relay_endpoint": mev_endpoints[0],
     }
 
     # if we are creating a mock mev environment we don't have to spin up relays
