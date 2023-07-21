@@ -27,6 +27,8 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_t
     if mev_type == MOCK:
 		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_engine_uri, beacon_uri.replace("http://", ""), jwt_secret)]
     elif mev_type == FULL:
+        if launch_mev_flood:
+            mev_flood_module.launch_mev_flood(plan, el_uri)
         mev_endpoints = ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"]
     else:
         fail("mev_type passed to mev_launcher was {0}; but we only allow '{1}' or '{2}".format(mev_type, MOCK, FULL))
