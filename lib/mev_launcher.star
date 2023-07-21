@@ -2,6 +2,7 @@ utils = import_module("github.com/kurtosis-tech/mev-package/lib/utils.star")
 mev_relay_module = import_module("github.com/kurtosis-tech/mev-package/lib/mev_relay_launcher.star")
 mev_flood_module = import_module("github.com/kurtosis-tech/mev-package/lib/mev_flood_launcher.star")
 mev_boost_module = import_module("github.com/kurtosis-tech/mev-package/lib/mev_boost_launcher.star")
+mock_mev_launcher_module =  import_module("github.com/kurtosis-tech/mev-package/lib/mock_mev_launcher.star")
 
 
 VALIDATOR_SERVICE_NAME = "cl-client-0-validator"
