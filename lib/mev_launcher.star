@@ -10,19 +10,35 @@ MEV_BOOST_SHOULD_CHECK_RELAY = True
 HTTP_PORT_ID_FOR_FACT = "http"
 SECONDS_PER_BUNDLE = "20" # higher than slot time 12
 
-def launch_mev(plan, el_client_context, cl_client_context, network_params, launch_mev_flood = True, seconds_per_bundle = SECONDS_PER_BUNDLE):
+def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_type = "mock", launch_mev_flood = True, seconds_per_bundle = SECONDS_PER_BUNDLE):
     validators_root = utils.get_genesis_validators_root(plan, VALIDATOR_SERVICE_NAME)
     el_uri = "http://{0}:{1}".format(el_client_context.ip_addr, el_client_context.rpc_port_num)
-    if launch_mev_flood:
-        mev_flood_module.launch_mev_flood(plan, el_uri)
-    
     beacon_uri = ["http://{0}:{1}".format(cl_client_context.ip_addr, cl_client_context.http_port_num)]
     beacon_uris = ",".join(beacon_uri)
     beacon_service_name = cl_client_context.beacon_service_name
+    jwt_secret = el_client_context.jwt_secret
 
+    mev_endpoints = []
+
+    if mev_type == "mock":
+		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_uri, beacon_uri, jwt_secret)]
+    elif mev_type == "full":
+        mev_endpoints = ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"]
+    else:
+        fail("mev_type passed to mev_launcher was {0}; but we only allow 'full' or 'mock".format(mev_type))
+    
     mev_boost_service_name = MEV_BOOST_SERVICE_NAME_PREFIX + str(0)
-    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"])
+    mev_boost_launcher = mev_boost_module.new_mev_boost_launcher(MEV_BOOST_SHOULD_CHECK_RELAY, mev_endpoints)
     mev_boost_context = mev_boost_module.launch(plan, mev_boost_launcher, mev_boost_service_name, network_params["network_id"])
+
+    result = {
+        "mev-boost-context": mev_boost_context,
+        "relay_endpoint": relay_endpoint,
+    }
+
+    # if we are creating a mock mev environment we don't have to spin up relays
+    if mev_type == "mock":
+        return result
 
     epoch_recipe = GetHttpRequestRecipe(
         endpoint = "/eth/v1/beacon/blocks/head",
@@ -38,10 +54,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, launc
     if launch_mev_flood:
         mev_flood_module.spam_in_background(plan, el_uri, seconds_per_bundle)
 
-    return {
-        "mev-boost-context": mev_boost_context,
-        "relay_endpoint": relay_endpoint,
-    }
+    return result
 
 def get_mev_params():
     mev_url = "http://{0}{1}:{2}".format(MEV_BOOST_SERVICE_NAME_PREFIX, 0, mev_boost_module.FLASHBOTS_MEV_BOOST_PORT)
