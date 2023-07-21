@@ -7,6 +7,11 @@ This is a [Kurtosis package](https://docs.kurtosis.com/concepts-reference/packag
 4. MEV Boost
 5. MEV Flood
 
+As of 2023-07-21 this package is set to spin up Mock MEV instead of the full stack above which would spin up
+
+1. Mock MEV builder by Ethereum Foundation
+2. MEV Boost
+
 Use this package in your package
 --------------------------------
 Kurtosis packages can be composed inside other Kurtosis packages. To use this package in your package:
