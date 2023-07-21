@@ -14,6 +14,7 @@ SECONDS_PER_BUNDLE = "20" # higher than slot time 12
 def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_type = "mock", launch_mev_flood = True, seconds_per_bundle = SECONDS_PER_BUNDLE):
     validators_root = utils.get_genesis_validators_root(plan, VALIDATOR_SERVICE_NAME)
     el_uri = "http://{0}:{1}".format(el_client_context.ip_addr, el_client_context.rpc_port_num)
+    el_engine_uri = "{0}:{1}".format(el_client_context.ip_addr, el_client_context.engine_rpc_port_num)
     beacon_uri = ["http://{0}:{1}".format(cl_client_context.ip_addr, cl_client_context.http_port_num)]
     beacon_uris = ",".join(beacon_uri)
     beacon_service_name = cl_client_context.beacon_service_name
@@ -22,7 +23,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_t
     mev_endpoints = []
 
     if mev_type == "mock":
-		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_uri, beacon_uri[0], jwt_secret)]
+		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_uri, beacon_uri[0].replace("http://", ""), jwt_secret)]
     elif mev_type == "full":
         mev_endpoints = ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"]
     else:
