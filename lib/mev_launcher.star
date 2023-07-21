@@ -15,15 +15,14 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_t
     validators_root = utils.get_genesis_validators_root(plan, VALIDATOR_SERVICE_NAME)
     el_uri = "http://{0}:{1}".format(el_client_context.ip_addr, el_client_context.rpc_port_num)
     el_engine_uri = "{0}:{1}".format(el_client_context.ip_addr, el_client_context.engine_rpc_port_num)
-    beacon_uri = ["http://{0}:{1}".format(cl_client_context.ip_addr, cl_client_context.http_port_num)]
-    beacon_uris = ",".join(beacon_uri)
+    beacon_uri = "http://{0}:{1}".format(cl_client_context.ip_addr, cl_client_context.http_port_num)
     beacon_service_name = cl_client_context.beacon_service_name
     jwt_secret = el_client_context.jwt_secret
 
     mev_endpoints = []
 
     if mev_type == "mock":
-		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_engine_uri, beacon_uri[0].replace("http://", ""), jwt_secret)]
+		mev_endpoints = [mock_mev_launcher_module.launch_mock_mev(plan, el_engine_uri, beacon_uri.replace("http://", ""), jwt_secret)]
     elif mev_type == "full":
         mev_endpoints = ["http://0xa55c1285d84ba83a5ad26420cd5ad3091e49c55a813eee651cd467db38a8c8e63192f47955e9376f6b42f6d190571cb5@mev-relay-api:9062"]
     else:
@@ -52,7 +51,7 @@ def launch_mev(plan, el_client_context, cl_client_context, network_params, mev_t
     plan.wait(recipe = epoch_recipe, field = "extract.epoch", assertion = ">=", target_value = str(network_params["capella_fork_epoch"]), timeout = "20m", service_name = beacon_service_name)
     plan.print("epoch {0} reached, can begin mev stuff".format(network_params["capella_fork_epoch"]))
 
-    relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uris, validators_root)
+    relay_endpoint = mev_relay_module.launch_mev_relay(plan, network_params["network_id"], beacon_uri, validators_root)
     if launch_mev_flood:
         mev_flood_module.spam_in_background(plan, el_uri, seconds_per_bundle)
 
